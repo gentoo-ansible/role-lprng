@@ -1,0 +1,14 @@
+---
+# Specify printers to be defined. Expectes array of hashes with keys:
+#   name     - Primary printer name, e.g. lp0 (required).
+#   device   - Device name or pipe to send output to, e.g. /dev/usb/lp0 (required).
+#   alt_name - Alternate printer name, e.g. Photosmart7400 (optional).
+#   comment  - Comment identifying the printer (LPQ) (optional).
+lprng_printers: []
+
+# Path to log file.
+lprng_log_file: /var/log/lprng.log
+
+# Accounting file, filter, or remote accounting server.
+# See printcap(5), definition 'af', for more information.
+lprng_accounting: /var/spool/lpd/%P/accounting

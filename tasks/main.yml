@@ -1,0 +1,23 @@
+---
+- name: install net-print/lprng
+  portage: package=net-print/lprng
+
+- name: configure printcap
+  template: >
+    src=printcap.j2
+    dest=/etc/lprng/printcap
+    owner=root group=root mode=0644
+  notify: restart lprng
+
+- name: run checkpc to create and fix files defined in printcap
+  shell: >
+    checkpc -f 2>&1; checkpc -f 1>&2
+  register: _checkpc
+  changed_when: _checkpc.stdout != ''
+  failed_when: _checkpc.stderr != ''
+
+# trigger handlers now to avoid unnecessary restarts
+- meta: flush_handlers
+
+- name: enable and start lprng
+  service: name=lprng enabled=yes state=started

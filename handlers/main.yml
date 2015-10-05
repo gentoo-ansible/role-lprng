@@ -1,0 +1,3 @@
+---
+- name: restart lprng
+  service: name=lprng state=restarted

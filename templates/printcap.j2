@@ -1,0 +1,30 @@
+# {{ ansible_managed }}
+# Printer capability database
+
+.common:
+	# spool queue directory for temporary storage of print jobs
+	:sd=/var/spool/lpd/%P
+	# accounting file, filter, or remote accounting server
+	:af={{ lprng_accounting }}
+	# error and debugging log file (LPD)
+	:lf={{ lprng_log_file }}
+	# suppress banners or header pages
+	:sh
+	# maximum job size in K bytes (0 is unlimited)
+	:mx#0
+	# maximum number of copies (0 is unlimited)
+	:mc#0
+	# create log, debug, etc., files automatically
+	:create_files
+{% for item in lprng_printers %}
+
+{{ item.name }}{{ '|' + item.alt_name if item.alt_name is defined else '' }}
+	# reference to a printcap entry to include as part of the current entry
+	:tc=.common
+	# device name or pipe to send output to
+	:lp={{ item.device }}
+{% if item.comment is defined %}
+	# comment identifying printer (LPQ)
+	:cm={{ item.comment }}
+{% endif %}
+{% endfor %}
